@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="static/map/css/leaflet.css">
+    <link rel="stylesheet" href="static/map/css/qgis2web.css">
+    <link rel="stylesheet" href="static/map/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="static/map/css/MarkerCluster.css">
+    <link rel="stylesheet" href="static/map/css/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="static/map/css/leaflet-control-geocoder.Geocoder.css">
+    <style>
+        #map {
+            /* width: 100%; */
+            height: 97vh;
+        }
+    </style>
+    <title>雙北周遭物件</title>
+</head>
+
+<body>
+    <div id="map">
+    </div>
+    <script src="static/map/js/qgis2web_expressions.js"></script>
+    <script src="static/map/js/leaflet.js"></script>
+    <script src="static/map/js/leaflet.rotatedMarker.js"></script>
+    <script src="static/map/js/leaflet.pattern.js"></script>
+    <script src="static/map/js/leaflet-hash.js"></script>
+    <script src="static/map/js/Autolinker.min.js"></script>
+    <script src="static/map/js/rbush.min.js"></script>
+    <script src="static/map/js/labelgun.min.js"></script>
+    <script src="static/map/js/labels.js"></script>
+    <script src="static/map/js/leaflet-control-geocoder.Geocoder.js"></script>
+    <script src="static/map/js/leaflet.markercluster.js"></script>
+    <script src="static/map/data/garbage_with_coords_2.js"></script>
+    <script src="static/map/data/hospital_with_coords_3.js"></script>
+    <script src="static/map/data/primary_school_with_coords_4.js"></script>
+    <script src="static/map/data/secondary_school_with_coords_5.js"></script>
+    <script src="static/map/data/railway_6.js"></script>
+    <script src="static/map/data/taipeimetro_7.js"></script>
+    <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+    <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+                highlightLayer.setStyle({
+                    color: '#ff0004',
+                });
+            } else {
+                highlightLayer.setStyle({
+                    fillColor: '#ff0004',
+                    fillOpacity: 1
+                });
+            }
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            center: ["{{results.0.13}}", "{{results.0.14}}"],//25.04784, 121.51636
+            zoom: 14
+        });
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({ truncate: { length: 30, location: 'smart' } });
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_Positron_0');
+        map.getPane('pane_Positron_0').style.zIndex = 1;
+        var layer_Positron_0 = L.tileLayer('https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            pane: 'pane_Positron_0',
+            opacity: 1.0,
+            attribution: '<a href="https://cartodb.com/basemaps/">Map tiles by CartoDB, under CC BY 3.0. Data by OpenStreetMap, under ODbL.</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+
+
+        layer_Positron_0;
+        map.addLayer(layer_Positron_0);
+        map.createPane('pane_GoogleRoad_1');
+        map.getPane('pane_GoogleRoad_1').style.zIndex = 2;
+        var layer_GoogleRoad_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleRoad_1',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleRoad_1;
+        map.addLayer(layer_GoogleRoad_1);
+        function pop_garbage_with_coords_2(feature, layer) {
+            layer.on({
+                mouseout: function (e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function (feature) {
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">名稱</th>\
+                        <td>' + (feature.properties['incineratorname'] !== null ? autolinker.link(feature.properties['incineratorname'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">類型</th>\
+                        <td>' + (feature.properties['type'] !== null ? autolinker.link(feature.properties['type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+        }
+
+        function style_garbage_with_coords_2_0(feature) {
+            switch (String(feature.properties['type'])) {
+                case '焚化廠':
+                    return {
+                        pane: 'pane_garbage_with_coords_2',
+                        rotationAngle: 0.0,
+                        rotationOrigin: 'center center',
+                        icon: L.icon({
+                            iconUrl: 'static/map/markers/amenity=recycling.svg',
+                            iconSize: [15, 15]
+                        }),
+                        interactive: true,
+                    }
+                    break;
+                case '靈骨塔':
+                    return {
+                        pane: 'pane_garbage_with_coords_2',
+                        rotationAngle: 0.0,
+                        rotationOrigin: 'center center',
+                        icon: L.icon({
+                            iconUrl: 'static/map/markers/tree.svg',
+                            iconSize: [15, 15]
+                        }),
+                        interactive: true,
+                    }
+                    break;
+            }
+        }
+        map.createPane('pane_garbage_with_coords_2');
+        map.getPane('pane_garbage_with_coords_2').style.zIndex = 402;
+        map.getPane('pane_garbage_with_coords_2').style['mix-blend-mode'] = 'normal';
+        var layer_garbage_with_coords_2 = new L.geoJson(json_garbage_with_coords_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_garbage_with_coords_2',
+            layerName: 'layer_garbage_with_coords_2',
+            pane: 'pane_garbage_with_coords_2',
+            onEachFeature: pop_garbage_with_coords_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_garbage_with_coords_2_0(feature));
+            },
+        });
+        var cluster_garbage_with_coords_2 = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2
+        });
+        cluster_garbage_with_coords_2.addLayer(layer_garbage_with_coords_2);
+
+        bounds_group.addLayer(layer_garbage_with_coords_2);
+        cluster_garbage_with_coords_2.addTo(map);
+        function pop_hospital_with_coords_3(feature, layer) {
+            layer.on({
+                mouseout: function (e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function (feature) {
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">醫院</th>\
+                        <td>' + (feature.properties['醫院'] !== null ? autolinker.link(feature.properties['醫院'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">地址</th>\
+                        <td>' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+        }
+
+        function style_hospital_with_coords_3_0() {
+            return {
+                pane: 'pane_hospital_with_coords_3',
+                rotationAngle: 0.0,
+                rotationOrigin: 'center center',
+                icon: L.icon({
+                    iconUrl: 'static/map/markers/amenity=pharmacy.svg',
+                    iconSize: [15, 15]
+                }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_hospital_with_coords_3');
+        map.getPane('pane_hospital_with_coords_3').style.zIndex = 403;
+        map.getPane('pane_hospital_with_coords_3').style['mix-blend-mode'] = 'normal';
+        var layer_hospital_with_coords_3 = new L.geoJson(json_hospital_with_coords_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_hospital_with_coords_3',
+            layerName: 'layer_hospital_with_coords_3',
+            pane: 'pane_hospital_with_coords_3',
+            onEachFeature: pop_hospital_with_coords_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_hospital_with_coords_3_0(feature));
+            },
+        });
+        var cluster_hospital_with_coords_3 = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2
+        });
+        cluster_hospital_with_coords_3.addLayer(layer_hospital_with_coords_3);
+
+        bounds_group.addLayer(layer_hospital_with_coords_3);
+        cluster_hospital_with_coords_3.addTo(map);
+        function pop_primary_school_with_coords_4(feature, layer) {
+            layer.on({
+                mouseout: function (e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function (feature) {
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">學校名稱</th>\
+                        <td>' + (feature.properties['學校名稱'] !== null ? autolinker.link(feature.properties['學校名稱'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">地址</th>\
+                        <td>' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+        }
+
+        function style_primary_school_with_coords_4_0() {
+            return {
+                pane: 'pane_primary_school_with_coords_4',
+                rotationAngle: 0.0,
+                rotationOrigin: 'center center',
+                icon: L.icon({
+                    iconUrl: 'static/map/markers/school.svg',
+                    iconSize: [15, 15]
+                }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_primary_school_with_coords_4');
+        map.getPane('pane_primary_school_with_coords_4').style.zIndex = 404;
+        map.getPane('pane_primary_school_with_coords_4').style['mix-blend-mode'] = 'normal';
+        var layer_primary_school_with_coords_4 = new L.geoJson(json_primary_school_with_coords_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_primary_school_with_coords_4',
+            layerName: 'layer_primary_school_with_coords_4',
+            pane: 'pane_primary_school_with_coords_4',
+            onEachFeature: pop_primary_school_with_coords_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_primary_school_with_coords_4_0(feature));
+            },
+        });
+        var cluster_primary_school_with_coords_4 = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2
+        });
+        cluster_primary_school_with_coords_4.addLayer(layer_primary_school_with_coords_4);
+
+        bounds_group.addLayer(layer_primary_school_with_coords_4);
+        cluster_primary_school_with_coords_4.addTo(map);
+        function pop_secondary_school_with_coords_5(feature, layer) {
+            layer.on({
+                mouseout: function (e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function (feature) {
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">學校名稱</th>\
+                        <td>' + (feature.properties['school_name'] !== null ? autolinker.link(feature.properties['school_name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">地址</th>\
+                        <td>' + (feature.properties['address'] !== null ? autolinker.link(feature.properties['address'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+        }
+
+        function style_secondary_school_with_coords_5_0() {
+            return {
+                pane: 'pane_secondary_school_with_coords_5',
+                rotationAngle: 0.0,
+                rotationOrigin: 'center center',
+                icon: L.icon({
+                    iconUrl: 'static/map/markers/tourism=museum.svg',
+                    iconSize: [15, 15]
+                }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_secondary_school_with_coords_5');
+        map.getPane('pane_secondary_school_with_coords_5').style.zIndex = 405;
+        map.getPane('pane_secondary_school_with_coords_5').style['mix-blend-mode'] = 'normal';
+        var layer_secondary_school_with_coords_5 = new L.geoJson(json_secondary_school_with_coords_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_secondary_school_with_coords_5',
+            layerName: 'layer_secondary_school_with_coords_5',
+            pane: 'pane_secondary_school_with_coords_5',
+            onEachFeature: pop_secondary_school_with_coords_5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_secondary_school_with_coords_5_0(feature));
+            },
+        });
+        var cluster_secondary_school_with_coords_5 = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2
+        });
+        cluster_secondary_school_with_coords_5.addLayer(layer_secondary_school_with_coords_5);
+
+        bounds_group.addLayer(layer_secondary_school_with_coords_5);
+        cluster_secondary_school_with_coords_5.addTo(map);
+        function pop_railway_6(feature, layer) {
+            layer.on({
+                mouseout: function (e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function (feature) {
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">站名</th>\
+                        <td>' + (feature.properties['站名'] !== null ? autolinker.link(feature.properties['站名'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">地址</th>\
+                        <td>' + (feature.properties['住址'] !== null ? autolinker.link(feature.properties['住址'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+        }
+
+        function style_railway_6_0() {
+            return {
+                pane: 'pane_railway_6',
+                rotationAngle: 0.0,
+                rotationOrigin: 'center center',
+                icon: L.icon({
+                    iconUrl: 'static/map/markers/transport_train_station.svg',
+                    iconSize: [15, 15]
+                }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_railway_6');
+        map.getPane('pane_railway_6').style.zIndex = 406;
+        map.getPane('pane_railway_6').style['mix-blend-mode'] = 'normal';
+        var layer_railway_6 = new L.geoJson(json_railway_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_railway_6',
+            layerName: 'layer_railway_6',
+            pane: 'pane_railway_6',
+            onEachFeature: pop_railway_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_railway_6_0(feature));
+            },
+        });
+        var cluster_railway_6 = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2
+        });
+        cluster_railway_6.addLayer(layer_railway_6);
+
+        bounds_group.addLayer(layer_railway_6);
+        cluster_railway_6.addTo(map);
+        function pop_taipeimetro_7(feature, layer) {
+            layer.on({
+                mouseout: function (e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function (feature) {
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">站名</th>\
+                        <td>' + (feature.properties['站名'] !== null ? autolinker.link(feature.properties['站名'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">地址</th>\
+                        <td>' + (feature.properties['地址'] !== null ? autolinker.link(feature.properties['地址'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+        }
+
+        function style_taipeimetro_7_0() {
+            return {
+                pane: 'pane_taipeimetro_7',
+                rotationAngle: 0.0,
+                rotationOrigin: 'center center',
+                icon: L.icon({
+                    iconUrl: 'static/map/markers/transport_train_station2.svg',
+                    iconSize: [15, 15]
+                }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_taipeimetro_7');
+        map.getPane('pane_taipeimetro_7').style.zIndex = 407;
+        map.getPane('pane_taipeimetro_7').style['mix-blend-mode'] = 'normal';
+        var layer_taipeimetro_7 = new L.geoJson(json_taipeimetro_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_taipeimetro_7',
+            layerName: 'layer_taipeimetro_7',
+            pane: 'pane_taipeimetro_7',
+            onEachFeature: pop_taipeimetro_7,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_taipeimetro_7_0(feature));
+            },
+        });
+        var cluster_taipeimetro_7 = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2
+        });
+        cluster_taipeimetro_7.addLayer(layer_taipeimetro_7);
+
+        bounds_group.addLayer(layer_taipeimetro_7);
+        cluster_taipeimetro_7.addTo(map);
+        var title = new L.Control();
+        title.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+        title.update = function () {
+            this._div.innerHTML = '<h2>雙北周遭物件</h2>';
+        };
+        title.addTo(map);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+            .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+            .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps, { '<img src="static/map/legend/taipeimetro_7.png" /> 捷運站': cluster_taipeimetro_7, '<img src="static/map/legend/railway_6.png" /> 火車站': cluster_railway_6, '<img src="static/map/legend/secondary_school_with_coords_5.png" /> 國中': cluster_secondary_school_with_coords_5, '<img src="static/map/legend/school.png" /> 國小': cluster_primary_school_with_coords_4, '<img src="static/map/legend/hospital_with_coords_3.png" /> 醫院': cluster_hospital_with_coords_3, '<img src="static/map/legend/garbage_with_coords_2_0.png" /><img src="static/map/legend/garbage_with_coords_2_1.png" />焚化廠及靈骨塔<br /><td style="text-align: center;"></td><td></td></tr></table>': cluster_garbage_with_coords_2, "GoogleMap": layer_GoogleRoad_1, "CartodbMap": layer_Positron_0, }).addTo(map);
+        setBounds();
+        resetLabels([layer_hospital_with_coords_3]);
+        map.on("zoomend", function () {
+            resetLabels([layer_hospital_with_coords_3]);
+        });
+        map.on("layeradd", function () {
+            resetLabels([layer_hospital_with_coords_3]);
+        });
+        map.on("layerremove", function () {
+            resetLabels([layer_hospital_with_coords_3]);
+        });
+
+
+        // L.marker([24.9853764, 121.5602683]).addTo(map)
+        //     .bindPopup(' 24.9853764, 121.5602683 ')
+        //     .openPopup();
+
+        "{% for result in results %}"
+
+        L.marker(["{{result.13}}", "{{result.14}}"]).addTo(map)
+            .bindPopup(' {{result.12}} ')
+            .openPopup();
+
+        var circle = L.circle(["{{result.13}}", "{{result.14}}"], {
+            color: '#f03', // 圓形的邊框顏色
+            fillColor: '#f03', // 圓形的填充顏色
+            fillOpacity: 0.25, // 填充透明度
+            radius: 500 // 半徑（單位：米）
+        }).addTo(map);
+
+        "{% endfor %}"
+    </script>
+</body>
+
+</html>

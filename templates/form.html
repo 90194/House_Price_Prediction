@@ -1,0 +1,43 @@
+{% extends "index-demo.html" %}
+
+{% block title %}form{% endblock title %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='jquery/jquery-3.5.1.min.js') }}"></script>
+{% endblock scripts %}
+
+{% block page_content %}
+<!-- practice start -->
+<form method="POST" action="/form_result">
+    <select name="city" class="select" id="city" onchange="citychange()" data-gtm-form-interact-field-id="0">
+
+        <option value="" selected="">請選擇縣市</option>
+
+        <option value="臺北市">臺北市</option>
+        <option value="新北市">新北市</option>
+
+    </select>
+    <br>
+    <input type="hidden" name="change_city" value="" id="change_city">
+
+    <select name="cityarea" class="select" onchange="cityareaChange();" id="cityarea">
+        <option value="" selected="">請選擇鄉鎮市區</option>
+    </select>
+    <br>
+    <select name="square_meters">
+        <option value="" selected="">請選擇坪數</option>
+
+        <option value="5">1-10 坪</option>
+        <option value="15">11-20坪</option>
+        <option value="25">21-30坪</option>
+        <option value="35">31-40坪</option>
+        <option value="45">41-50坪</option>
+        <option value="75">50坪以上</option>
+    </select>
+    <!-- <input type="hidden" name="city_hidden" id="city_hidden" value="">
+       <input type="hidden" name="square_meters_hidden" id="square_meters_hidden" value=""> -->
+    <button type="submit" class="button large wide smooth-scroll-middle">Submit</button>
+</form>
+<!-- practice end -->
+{% endblock page_content %}

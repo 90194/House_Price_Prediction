@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<!--
+	Story by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+
+	Note: Only needed for demo purposes. Delete for production sites.
+-->
+<html>
+
+<head>
+	<title>房價預測</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="static/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="static/css/noscript.css" />
+	</noscript>
+
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper" class="divided">
+
+		<!-- Banner -->
+		{% block form %}
+		<form method="POST" action="/form_result">
+			<section
+				class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
+				<div class="content">
+					<h1>雙北房價預測</h1>
+					<select name="city" required class="select" id="city" onchange="citychange()"
+						data-gtm-form-interact-field-id="0">
+
+						<option value="" selected="">請選擇縣市</option>
+
+						<option value="臺北市">臺北市</option>
+						<option value="新北市">新北市</option>
+
+					</select>
+					<br>
+					<input type="hidden" name="change_city" value="" id="change_city">
+
+					<select name="cityarea" class="select" onchange="cityareaChange();" id="cityarea" required>
+						<option value="" selected disabled hidden>請選擇鄉鎮市區</option>
+					</select>
+					<br>
+					<select name="square_meters" required>
+						<option value="" selected="">請選擇坪數</option>
+
+						<option value="5">1-10 坪</option>
+						<option value="15">11-20坪</option>
+						<option value="25">21-30坪</option>
+						<option value="35">31-40坪</option>
+						<option value="45">41-50坪</option>
+						<option value="75">50坪以上</option>
+					</select>
+					<br>
+					<button type="button" id="showFilterOptions">進階篩選</button>
+					<br>
+					<div class="overlay" id="overlay"></div>
+					<div class="popup" id="popup" style="width: auto;white-space: nowrap;">
+						<h2>進階篩選</h2>
+						<form>
+							<table style="width: auto;">
+								<th>類型</th>
+								<th>
+									<select name="house_type" id="houseTypeSelect">
+										<option value="住宅大樓" selected>請選擇房屋類型</option>
+										<option value="公寓">公寓</option>
+										<option value="住宅大樓">住宅大樓</option>
+										<option value="套房">套房</option>
+										<option value="華廈">華廈</option>
+									</select>
+								</th>
+								<th>電梯</th>
+								<th>
+									<select name="house_elevator" id="ElevatorSelect">
+										<option value="1" selected>請選擇有無電梯</option>
+										<option value="0">無電梯</option>
+										<option value="1">有電梯</option>
+									</select>
+								</th>
+								<th>管理</th>
+								<th>
+									<select name="house_management" id="ManagementSelect">
+										<option value="1" selected>請選擇有無管理員</option>
+										<option value="0">無管理員</option>
+										<option value="1">有管理員</option>
+									</select>
+								</th>
+
+							</table>
+							<table>
+								<thead>
+									<tr>
+										<th>格局</th>
+										<th>
+											<select name="bedroom_pattern">
+												<option value="1" selected> 房間數</option>
+												<option value="1">1房</option>
+												<option value="2">2房</option>
+												<option value="3">3房</option>
+												<option value="4">4房</option>
+												<option value="5">5房</option>
+												<option value="6">6房</option>
+												<option value="7">7房</option>
+												<option value="8">8房</option>
+												<option value="9">9房</option>
+												<option value="10">10房</option>
+											</select>
+										</th>
+										<th>
+											<select name="livingRoom_pattern" id="livingRoomSelect">
+												<option value="1" selected>客廳數</option>
+												<option value="0">無客廳</option>
+												<option value="1">1廳</option>
+												<option value="2">2廳</option>
+												<option value="3">3廳</option>
+												<option value="4">4廳</option>
+												<option value="5">5廳</option>
+												<option value="6">6廳</option>
+												<option value="7">7廳</option>
+												<option value="8">8廳</option>
+												<option value="9">9廳</option>
+												<option value="10">10廳</option>
+											</select>
+										</th>
+										<th>
+											<select name="bathroom_pattern">
+												<option value="1" selected>衛浴數</option>
+												<option value="0">無衛浴</option>
+												<option value="1">1衛</option>
+												<option value="2">2衛</option>
+												<option value="3">3衛</option>
+												<option value="4">4衛</option>
+												<option value="5">5衛</option>
+												<option value="6">6衛</option>
+												<option value="7">7衛</option>
+												<option value="8">8衛</option>
+												<option value="9">9衛</option>
+												<option value="10">10衛</option>
+											</select>
+										</th>
+									</tr>
+								</thead>
+							</table>
+							<table>
+								<th>屋齡</th>
+
+								<th>
+									<select name="house_age">
+										<option value="11" selected>請選擇屋齡</option>
+										<option value="1">0-10年</option>
+										<option value="11">11-20年</option>
+										<option value="21">21-30年</option>
+										<option value="31">31-40年</option>
+										<option value="40">41年以上</option>
+									</select>
+								</th>
+								<th>停車位</th>
+								<th>
+									<select name="house_parking">
+										<option value="1" selected>請選擇停車位</option>
+										<option value="0">無停車位</option>
+										<option value="1">有停車位</option>
+									</select>
+								</th>
+
+							</table>
+
+
+
+							<button type="button" id="confirmPopup">確定</button>
+						</form>
+					</div>
+					<br>
+					<br>
+					<button type="submit" class="button large wide smooth-scroll-middle">Submit</button>
+				</div>
+				<div class="image">
+					<img src="static/images/banner.png" alt="" />
+				</div>
+			</section>
+		</form>
+		{% endblock form %}
+		<!-- Spotlight -->
+
+		<!-- Footer -->
+		<footer class="wrapper style1 align-center">
+			<div class="inner">
+				<ul class="icons">
+					<li><a href="https://github.com/roseweng/house_price" target="_blank"><img
+								src="./static/images/git.png"></a></li>
+					<li><a href="./static/images/BDSE31_第三組_房價預測_以雙北地區住宅預測分析.pdf" target="_blank"><img
+								src="./static/images/ppt.png"></a></li>
+					<li><a href="{{ url_for('members') }}"><img src="./static/images/user.png"></a></li>
+					<!-- <li><a href=""><img src="./static/images/here.pptx (1).png"></a></li>
+					<li><a href=""><img src="./static/images/here.pptx (2).png"></a></li>
+					<li><a href=""><img src="./static/images/here.pptx (3).png"></a></li>
+					<li><a href=""><img src="./static/images/here.pptx (4).png"></a></li>
+					<li><a href=""><img src="./static/images/here.pptx (5).png"></a></li> -->
+
+					<!-- <li><a href="#" class="icon brands style2 fa-github"><span class="label">Github</span></a>
+					<li><a href="#" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a>
+					</li>
+					<li><a href="#" class="icon brands style2 fa-facebook-f"><span class="label">Facebook</span></a>
+					</li>
+					<li><a href="#" class="icon brands style2 fa-instagram"><span class="label">Instagram</span></a>
+					</li>
+					<li><a href="#" class="icon brands style2 fa-linkedin"><span class="label">LinkedIn</span></a>
+					</li>
+					<li><a href="#" class="icon style2 fa-envelope"><span class="label">Email</span></a>
+					</li> -->
+				</ul>
+				<p>&copy; BDSE31 TEAM 3 </p>
+			</div>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="static/js/jquery.min.js"></script>
+	<script src="static/js/jquery.scrollex.min.js"></script>
+	<script src="static/js/jquery.scrolly.min.js"></script>
+	<script src="static/js/browser.min.js"></script>
+	<script src="static/js/breakpoints.min.js"></script>
+	<script src="static/js/util.js"></script>
+	<script src="static/js/main.js"></script>
+	<script src="static/js/cityfunctions.js"></script>
+	<script src="static/js/button.js"></script>
+	<script src="static/js/pattern.js"></script>
+	<script src="static/js/management.js"></script>
+
+
+
+	<!-- Note: Only needed for demo purposes. Delete for production sites. -->
+	<script src="static/js/demo.js"></script>
+
+</body>
+
+</html>

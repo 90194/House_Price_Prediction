@@ -1,0 +1,80 @@
+{% extends "index-demo.html" %}
+
+
+{% block form %}
+<section class="banner style1 orient-right content-align-left image-position-center onscroll-image-fade-in"
+    style="height: 100%;  overflow-y: hidden;">
+    <div class="content" style="padding: 3%; padding-top: 2%; justify-content:safe center; overflow-y: hidden;">
+        <p style="margin-bottom: 15px;">搜尋結果</p>
+        <tr>
+            <td> {{request.form.get('city') }}</td>
+            <td> {{request.form.get('cityarea') }}</td>
+            <td>
+                {% set square_meters = request.form.get('square_meters') | int %}
+                {% if square_meters >= 1 and square_meters <= 10 %} 1~10坪 {% elif square_meters>= 11 and
+                    square_meters <= 20 %} 11~20坪 {% elif square_meters>= 21 and square_meters <= 30 %} 21~30坪 {% elif
+                            square_meters>= 31 and square_meters <= 40 %} 31~40坪 {% else %} 50坪以上 {% endif %} </td>
+        </tr>
+        <br></br>
+        <table class="table table-striped table-hover table-bordered" style="margin-bottom: 15px;">
+            <thead>
+                <tr>
+                    <!-- <th style="font-size: 25px;">{{request.form.get('cityarea') }}</th> -->
+                    <th style="font-size: 25px; padding: 0; font-weight: bold;">模型預測</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-size: 25px;padding: 0; font-weight: bold;">$ {{ (data | float / 10 ) | round(2,
+                        'floor') }}萬/坪</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table style="border-collapse: collapse;
+        width: 100%;">
+            <thead style="white-space: nowrap; text-align: left;">
+                <tr>
+                    <th>交易日期</th>
+                    <th>地址</th>
+                    <th>總坪數</th>
+                    <th>單坪價錢</th>
+                    <th>房廳衛</th>
+                    <th>屋齡</th>
+                    <th>樓層</th>
+                    <th>類型</th>
+                </tr>
+            <tbody style="white-space: nowrap; padding: 8px;text-align: left;">
+                {% for result in results %}
+                <tr>
+                    <td>{{ (result[3] | string)[:4] }}年{{ (result[3] | string)[4:] }}月</td>
+                    <td>{{ result[12] }}</td>
+                    <td>{{ result[8] }}</td>
+                    <td>{{ (result[15] | float / 10 ) | round(2, 'floor') }} 萬/坪</td>
+                    <td>{{ result[4] }}房{{ result[5] }}廳{{ result[6] }}衛</td>
+                    <td>{{ result[2] }}年</td>
+                    <td>{{ result[1] }}樓</td>
+                    <td>{{ result[10] }}</td>
+                </tr>
+                {% endfor %}
+                <span style="color: red;">{{ warning }}</span>
+            </tbody>
+            </thead>
+        </table>
+        <a href="/">
+            <button type="submit" class="button large wide smooth-scroll-middle">重新查詢</button>
+        </a>
+        <!-- <button type="button" class="button large wide smooth-scroll-middle" onclick="window.location.href='{{ url_for('index') }}'">重新查詢</button> -->
+        <!-- <button type="submit" class="button large wide smooth-scroll-middle">重新查詢</button> -->
+        <!-- <input type ="button" onclick="javascript:location.href='http://127.0.0.1:5000/'" value="重新查詢"></input> -->
+        <!-- <button type ="button" onclick="history.back()" value="回到上一頁">重新查詢</button> -->
+
+    </div>
+    <div class="image">
+        <img src="static/images/banner.png" alt="" />
+        <iframe src="{{ url_for('map') }}"
+            style="position: relative;  z-index: 2 ; width: 100%; height: 100%;"></iframe>
+    </div>
+</section>
+
+{% endblock form %}

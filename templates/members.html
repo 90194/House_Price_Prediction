@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<!--
+	Story by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+
+	Note: Only needed for demo purposes. Delete for production sites.
+-->
+<html>
+
+<head>
+	<title>房價預測</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="static/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="static/css/noscript.css" />
+	</noscript>
+
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper" class="divided">
+
+		<!-- Banner -->
+		{% block form %}
+		<form method="POST" action="/form_result">
+			<section
+				class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
+				<div class="content" style="padding: 4rem; text-align: center;">
+					<h1>組員介紹</h1>
+					<div style="display: flex;
+					flex-direction: row; 
+					justify-content: center; 
+					align-items: center;height: 100%;">
+						<img style="margin-right: 35px;" src="./static/images/here.pptx.png">
+						<a style="margin-right: 35px;white-space: nowrap;" href="./static/images/BDSE31_04_Resume.pdf"
+							target="_blank">曾子維</a>
+						<img style="margin-right: 35px;" src="./static/images/here.pptx (1).png">
+						<a style="margin-right: 35px;white-space: nowrap;"
+							href="https://drive.google.com/drive/folders/1e8AjZKJvk12B13ZC9MYFMh3C08TGeWRt?usp=sharing"
+							target="_blank">陳郁文</a>
+					</div>
+					<br>
+					<div style="display: flex;
+					flex-direction: row; 
+					justify-content: center; 
+					align-items: center;height: 100%;">
+						<img style="margin-right: 35px;" src="./static/images/here.pptx (2).png">
+						<a style="margin-right: 35px;white-space: nowrap;" href="./static/images/BDSE31_05簡宏晉_履歷.pdf"
+							target="_blank">簡宏晉</a>
+						<img style="margin-right: 35px;" src="./static/images/here.pptx (3).png">
+						<a style="margin-right: 35px;white-space: nowrap;" href="./static/images/25劉宇淨.pdf"
+							target="_blank">劉宇淨</a>
+					</div>
+					<br>
+					<div style="display: flex;
+					flex-direction: row; 
+					justify-content: center; 
+					align-items: center;height: 100%;">
+						<img style="margin-right: 35px;" src="./static/images/here.pptx (4).png">
+						<a style="margin-right: 35px;white-space: nowrap;"
+							href="./static/images/BDSE31_24翁若芸_簡歷.docx .pdf" target="_blank">翁若芸</a>
+						<img style="margin-right: 35px;" src="./static/images/here.pptx (5).png">
+						<a style="margin-right: 35px;white-space: nowrap;" href="./static/images/林文海.pdf"
+							target="_blank">林文海</a>
+					</div>
+					<br><br><br><br><br>
+
+
+
+
+					<!-- <p><a href=""><img src="./static/images/here.pptx.png"></a></p>
+					<p><a href=""><img src="./static/images/here.pptx (1).png"></a></p>
+					<p><a href=""><img src="./static/images/here.pptx (2).png"></a></p>
+					<p><a href=""><img src="./static/images/here.pptx (3).png"></a></p>
+					<p><a href=""><img src="./static/images/here.pptx (4).png"></a></p>
+					<p><a href=""><img src="./static/images/here.pptx (5).png"></a></p> -->
+				</div>
+				<div class="image">
+					<img src="static/images/banner.png" alt="" />
+				</div>
+			</section>
+		</form>
+		{% endblock form %}
+		<!-- Spotlight -->
+
+		<!-- Footer -->
+		<footer class="wrapper style1 align-center">
+			<div class="inner">
+				<ul class="icons">
+					<li><a href="https://github.com/roseweng/house_price" target="_blank"><img
+								src="./static/images/git.png"></a></li>
+					<li><a href="./static/images/BDSE31_第三組_房價預測_以雙北地區住宅預測分析.pdf" target="_blank"><img
+								src="./static/images/ppt.png"></a></li>
+					<li><a href="{{ url_for('members') }}"><img src="./static/images/user.png"></a></li>
+					<!-- <li><a href=""><img src="./static/images/here.pptx (1).png"></a></li>
+					<li><a href=""><img src="./static/images/here.pptx (2).png"></a></li>
+					<li><a href=""><img src="./static/images/here.pptx (3).png"></a></li>
+					<li><a href=""><img src="./static/images/here.pptx (4).png"></a></li>
+					<li><a href=""><img src="./static/images/here.pptx (5).png"></a></li> -->
+
+					<!-- <li><a href="#" class="icon brands style2 fa-github"><span class="label">Github</span></a>
+					<li><a href="#" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a>
+					</li>
+					<li><a href="#" class="icon brands style2 fa-facebook-f"><span class="label">Facebook</span></a>
+					</li>
+					<li><a href="#" class="icon brands style2 fa-instagram"><span class="label">Instagram</span></a>
+					</li>
+					<li><a href="#" class="icon brands style2 fa-linkedin"><span class="label">LinkedIn</span></a>
+					</li>
+					<li><a href="#" class="icon style2 fa-envelope"><span class="label">Email</span></a>
+					</li> -->
+				</ul>
+				<p>&copy; BDSE31 TEAM 3 </p>
+			</div>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="static/js/jquery.min.js"></script>
+	<script src="static/js/jquery.scrollex.min.js"></script>
+	<script src="static/js/jquery.scrolly.min.js"></script>
+	<script src="static/js/browser.min.js"></script>
+	<script src="static/js/breakpoints.min.js"></script>
+	<script src="static/js/util.js"></script>
+	<script src="static/js/main.js"></script>
+	<script src="static/js/cityfunctions.js"></script>
+	<script src="static/js/button.js"></script>
+	<script src="static/js/pattern.js"></script>
+	<script src="static/js/management.js"></script>
+
+
+
+	<!-- Note: Only needed for demo purposes. Delete for production sites. -->
+	<script src="static/js/demo.js"></script>
+
+</body>
+
+</html>
